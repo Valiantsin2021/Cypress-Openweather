@@ -19,8 +19,8 @@ let constants = {
     'How to start',
     'Ask a question'
   ],
-  cities: ['Marbella', 'Málaga', 'Sevilla'],
-  // cities: ['Granada'],
+  citiesES: ['Marbella', 'Málaga', 'Sevilla'],
+  citiesEN: ['Marbella', 'Malaga', 'Seville'],
   requests: [
     {
       method: 'GET',

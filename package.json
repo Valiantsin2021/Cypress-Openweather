@@ -21,7 +21,7 @@
     "@shelex/cypress-allure-plugin": "^2.34.0",
     "cypress": "^12.1.0",
     "cypress-mochawesome-reporter": "^3.2.3",
-    "cypress-plugin-api": "^2.8.0",
+    "cypress-plugin-api": "^2.9.0",
     "eslint-config-prettier": "^8.5.0",
     "eslint-plugin-chai-friendly": "^0.7.2",
     "eslint-plugin-cypress": "^2.12.1",

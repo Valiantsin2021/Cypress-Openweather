@@ -7,6 +7,7 @@ module.exports = defineConfig({
   viewportHeight: 800,
   e2e: {
     baseUrl: 'https://openweathermap.org/',
+    experimentalStudio: true,
     env: {
       allure: true,
       apiUrl: 'https://api.openweathermap.org/data/2.5/weather',

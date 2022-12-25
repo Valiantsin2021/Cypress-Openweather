@@ -7,17 +7,31 @@ describe('Performs search of the city on the home page of "https://openweatherma
   beforeEach(() => {
     BasePage.open()
   })
-  it.only(`intercepts request to api`, () => {
-    cy.intercept('GET', 'https://api.openweathermap.org/data/2.5/').as('req')
+  it(`Impossible to make request with api key from UI search request`, () => {
+    cy.intercept('GET', 'data/2.5/*').as('req')
     BasePage.open()
     BasePage.searchCityMainSearch('Marbella')
-    cy.wait('@req', { timeout: 10000 })
-      .its('response')
-      .then(response => {
-        cy.log(response.body)
+    cy.wait('@req')
+      .then(interception => {
+        interceptedId += interception.request.url.match(/appid=.*/g)[0].slice(6)
+        return interceptedId
+      })
+      .then(id => {
+        cy.api({
+          method: 'GET',
+          url: 'https://api.openweathermap.org/data/2.5/forecast',
+          qs: {
+            lon: '-4.8824474',
+            lat: '36.510071',
+            appid: id
+          },
+          failOnStatusCode: false
+        }).then(response => {
+          expect(response.status).to.eq(401)
+        })
       })
   })
-  constants.cities.forEach((el, i) => {
+  constants.citiesES.forEach((el, i) => {
     it(`Searches ${el} using the main search input`, () => {
       BasePage.searchCityMainSearch(el)
       cy.get(BasePage.searchDropdownMenu).should('be.visible')
@@ -28,18 +42,18 @@ describe('Performs search of the city on the home page of "https://openweatherma
       cy.get(BasePage.currentTemp)
         .invoke('text')
         .then(text => {
-          currentTempArr.push(parseInt(text))
+          currentTempArr.push(text)
         })
       let timeNow = (new Date().getHours() + 24) % 12 || 12
       BasePage.checkHour(timeNow)
     })
-    it(`Searches ${el} using the upper search input and compares temperature with the main search results`, () => {
+    it(`Searches ${el} using the upper search input and compares temperature with the main search results and the temperature on the map`, () => {
       BasePage.searchCityUpperSearch(el)
       cy.contains(el).click()
       cy.get(BasePage.currentTemp)
         .invoke('text')
         .then(text => {
-          expect(parseInt(text)).to.equal(currentTempArr[i])
+          expect(text).to.equal(currentTempArr[i])
         })
       cy.get(BasePage.mapLink)
         .then(el => {
@@ -49,18 +63,18 @@ describe('Performs search of the city on the home page of "https://openweatherma
       cy.get(BasePage.zoomInBtn).click()
       cy.wait(1000)
       cy.get(BasePage.zoomInBtn).click()
-      cy.contains(el)
+      cy.contains(constants.citiesEN[i])
         .parent()
-        .contains('span', currentTempArr[i].toString())
-        .should('exist')
+        .children('.city-weather')
+        .should('contain.text', currentTempArr[i].slice(0, 2))
     })
   })
   constants.requests.forEach((req, i) => {
-    it(`Send GET request for ${constants.cities[i]} and compares it with the temperature got with UI check`, () => {
+    it(`Send GET request for ${constants.citiesES[i]} and compares it with the temperature got with UI check`, () => {
       cy.api(req).then(response => {
         cy.log(response.body)
-        apiTemp.push(parseInt(response.body.main.temp))
-        expect(currentTempArr[i]).to.equal(apiTemp[i])
+        apiTemp.push(response.body.main.temp)
+        expect(parseInt(currentTempArr[i])).to.equal(parseInt(apiTemp[i]))
       })
     })
   })
