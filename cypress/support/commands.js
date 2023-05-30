@@ -16,7 +16,39 @@ Cypress.Commands.overwrite('log', (log, message, ...args) => {
 // commands please read more here:
 // https://on.cypress.io/custom-commands
 // ***********************************************
-//
+import '@cypress-audit/lighthouse/commands'
+
+import { faker } from '@faker-js/faker'
+import constants from '../fixtures/constants_testautomation'
+const firstName = faker.name.firstName(constants.gender)
+const lastName = faker.name.lastName(constants.gender)
+const companyName = faker.company.name()
+const email = faker.internet.email()
+const month = faker.date.month()
+const year = faker.date.birthdate().getFullYear().toString()
+const day = faker.date.birthdate().getDate()
+const password = faker.internet.password()
+Cypress.Commands.add('registerNewUser', () => {
+  cy.log(day, month, year)
+  cy.contains('a', constants.headerRegister).click()
+  cy.get('h1').should('have.text', constants.headerRegister)
+  cy.get(`span.${constants.gender} input`).check()
+  cy.get('#FirstName').type(firstName)
+  cy.get('#LastName').type(lastName)
+  cy.get('[name="DateOfBirthDay"]').select(day)
+  cy.get('[name="DateOfBirthMonth"]').select(month)
+  cy.get('[name="DateOfBirthYear"]').select(year)
+  cy.get('[type="email"]').eq(0).type(email)
+  cy.get('#Company').type(companyName)
+  if (constants.newsletter) {
+    cy.get('#Newsletter').check()
+  }
+  cy.get('#Password').type(password)
+  cy.get('#ConfirmPassword').type(password)
+  cy.get('#register-button').click()
+  cy.get('div.result').should('have.text', constants.successRegistration)
+  cy.contains('Continue').click()
+})
 //
 // -- This is a parent command --
 // Cypress.Commands.add('login', (email, password) => { ... })

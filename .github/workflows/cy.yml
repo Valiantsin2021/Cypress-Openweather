@@ -1,0 +1,29 @@
+name: E2E on Chrome
+on:
+  # Trigger the workflow on every push
+  push:
+    # Don't run this workflow if ALL changed files are only docs-related
+    paths-ignore:
+      - 'README.md'
+      - 'package.json'
+      - 'cypress.config.js'
+jobs:
+  cypress-run:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: true
+    name: E2E on Chrome
+    steps:
+      - name: Repository checkout
+        uses: actions/checkout@v3
+      - name: Run Cypress tests
+        uses: cypress-io/github-action@v5
+        with:
+          browser: chrome
+      - name: Upload artefacts (report)
+        uses: actions/upload-artifact@v3
+        if: always
+        with:
+          name: cypress-screenshots-videos-snapshots-reports
+          path: mochawesome-report
+          retention-days: 20

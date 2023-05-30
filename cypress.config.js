@@ -1,6 +1,7 @@
 const { defineConfig } = require('cypress')
 const allureWriter = require('@shelex/cypress-allure-plugin/writer')
-
+const { lighthouse, prepareAudit } = require('@cypress-audit/lighthouse')
+const fs = require('fs')
 module.exports = defineConfig({
   chromeWebSecurity: false,
   viewportWidth: 1280,
@@ -14,6 +15,32 @@ module.exports = defineConfig({
       appId: 'caf07bd1f505f0e9540e22f416c97487'
     },
     setupNodeEvents(on, config) {
+      on('before:browser:launch', (browser = {}, launchOptions) => {
+        prepareAudit(launchOptions)
+      })
+
+      on('task', {
+        lighthouse: lighthouse(lighthouseReport => {
+          const dirPath = './PerfReports'
+          if (!fs.existsSync(dirPath)) {
+            fs.mkdirSync(dirPath)
+          }
+          const name =
+            lighthouseReport.lhr.requestedUrl.replace(
+              /[-[\]{}()*+!<=:?.\/\\^$|#\s,]/g,
+              function (x) {
+                return ''
+              }
+            ) +
+            ' - ' +
+            lighthouseReport.lhr.fetchTime.split('T')[0]
+          fs.writeFileSync(
+            `${dirPath}/GLH-(${name}).json`,
+            JSON.stringify(lighthouseReport, null, 2)
+          )
+        })
+      })
+
       allureWriter(on, config)
       on('task', {
         print(s) {
