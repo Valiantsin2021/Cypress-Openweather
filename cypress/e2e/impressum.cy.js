@@ -34,7 +34,7 @@ describe(``, () => {
       })
     cy.get('@link').click({ force: true })
   })
-  it.only('another impressum', () => {
+  it('another impressum', () => {
     cy.visit('https://www.qi-digital.de/')
     cy.get('a[href*="impressum"]:visible')
       .as('link')
