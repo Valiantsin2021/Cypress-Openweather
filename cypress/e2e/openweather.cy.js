@@ -12,7 +12,9 @@ describe('Performs search of the city on the home page of "https://openweatherma
     BasePage.open()
     BasePage.searchCityMainSearch('Marbella')
     cy.wait('@req')
-      .then(interception => interception.request.url.match(/appid=.*/g)[0].slice(6))
+      .then(interception =>
+        interception.request.url.match(/appid=.*/g)[0].slice(6)
+      )
       .then(interceptedId => {
         cy.api({
           method: 'GET',
