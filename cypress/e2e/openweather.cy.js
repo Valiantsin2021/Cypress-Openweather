@@ -42,7 +42,7 @@ describe('Performs search of the city on the home page of "https://openweatherma
         .invoke('text')
         .then(text => {
           currentTempArr.push(text)
-          cy.log(currentTempArr)
+          cy.log(el + ' temperature is: ' + currentTempArr[i])
         })
       let timeNow = (new Date().getHours() + 24) % 12 || 12
       BasePage.checkHour(timeNow)
