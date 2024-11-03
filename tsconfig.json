@@ -1,13 +1,7 @@
 {
   "compilerOptions": {
-    "types": [
-      "cypress",
-      "node"
-    ],
-    "lib": [
-      "DOM",
-      "ES2023"
-    ],
+    "types": ["cypress", "node"],
+    "lib": ["DOM", "ES2023"],
     "module": "ESNext",
     "target": "ESNext",
     "strict": true,
@@ -16,13 +10,9 @@
     "moduleResolution": "node",
     "resolveJsonModule": true,
     "allowSyntheticDefaultImports": true,
-    "baseUrl": ".",
+    "baseUrl": "."
   },
-  "include": [
-    "cypress/**/*.js",
-    "cypress.config.js",
-    "./node_modules/cypress"
-  ],
+  "include": ["cypress/**/*.js", "cypress.config.js", "./node_modules/cypress"],
   "ts-node": {
     "compilerOptions": {
       "module": "ESNext"
