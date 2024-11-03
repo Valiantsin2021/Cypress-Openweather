@@ -15,11 +15,8 @@
 
 // Import commands.js using ES2015 syntax:
 import './commands'
-import '@shelex/cypress-allure-plugin'
+// import 'allure-cypress'
 import 'cypress-mochawesome-reporter/register'
 import 'cypress-plugin-api'
 import 'cypress-real-events'
 import 'cypress-xpath'
-
-// Alternatively you can use CommonJS syntax:
-// require('./commands')

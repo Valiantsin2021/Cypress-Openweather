@@ -1,5 +1,5 @@
-import BasePage from '../pageobjects/BasePage'
 import constants from '../fixtures/constants_openweather'
+import BasePage from '../pageobjects/BasePage'
 describe('Performs search of the city on the home page of "https://openweathermap.org/"', () => {
   let currentTempArr = []
   let apiTemp = []
@@ -12,17 +12,13 @@ describe('Performs search of the city on the home page of "https://openweatherma
     BasePage.open()
     BasePage.searchCityMainSearch('Marbella')
     cy.wait('@req')
-      .then(interception => {
-        interceptedId += interception.request.url.match(/appid=.*/g)[0].slice(6)
-        console.log(interceptedId)
-        return interceptedId
-      })
-      .then(id => {
+      .then(interception => interception.request.url.match(/appid=.*/g)[0].slice(6))
+      .then(interceptedId => {
         cy.api({
           method: 'GET',
           url: 'http://openweathermap.org/data/2.5/forecast',
           qs: {
-            appid: id,
+            appid: interceptedId,
             id: 2517115,
             units: 'metric'
           },
@@ -44,6 +40,7 @@ describe('Performs search of the city on the home page of "https://openweatherma
         .invoke('text')
         .then(text => {
           currentTempArr.push(text)
+          cy.log(currentTempArr)
         })
       let timeNow = (new Date().getHours() + 24) % 12 || 12
       BasePage.checkHour(timeNow)

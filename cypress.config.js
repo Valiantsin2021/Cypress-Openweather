@@ -1,5 +1,5 @@
 const { defineConfig } = require('cypress')
-const allureWriter = require('@shelex/cypress-allure-plugin/writer')
+// const { allureCypress } = require('allure-cypress/reporter')
 const { lighthouse, prepareAudit } = require('@cypress-audit/lighthouse')
 const fs = require('fs')
 module.exports = defineConfig({
@@ -41,7 +41,7 @@ module.exports = defineConfig({
         })
       })
 
-      allureWriter(on, config)
+      // allureCypress(on)
       on('task', {
         print(s) {
           console.log(s)
