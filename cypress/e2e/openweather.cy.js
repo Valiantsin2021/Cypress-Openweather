@@ -18,7 +18,7 @@ describe('Performs search of the city on the home page of "https://openweatherma
       .then(interceptedId => {
         cy.api({
           method: 'GET',
-          url: 'http://openweathermap.org/data/2.5/forecast',
+          url: 'http://api.openweathermap.org/data/2.5/forecast',
           qs: {
             appid: interceptedId,
             id: 2517115,
